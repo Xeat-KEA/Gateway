@@ -1,4 +1,4 @@
-package org.codingtext.gateway.config;
+package org.codingtext.gateway;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
