@@ -1,4 +1,4 @@
-package org.codingtext.gateway.jwt;
+package org.codingtext.gateway;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;

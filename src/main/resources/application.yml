@@ -23,7 +23,7 @@ spring:
             - AuthFilter
 
   jwt:
-    secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
+    secret: ${JWT_SECRET_KEY}
 
 server:
   port: 19091
@@ -34,7 +34,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:19090/eureka
+      defaultZone: ${EUREKA_SERVER_URL}
 
 logging:
   level:
