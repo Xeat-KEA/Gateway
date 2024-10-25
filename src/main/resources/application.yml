@@ -8,11 +8,19 @@ spring:
         - id: user-service
           uri: lb://USERSERVICE-LOCAL
           predicates:
-            - Path=/users/**, /auth/**, /health
+            - Path=/auth/**, /health, /oauth2/**, /login/**, / #인증 제외 목록
+        - id: user-service
+          uri: lb://USERSERVICE-LOCAL
+          predicates:
+            - Path=/users/**
+          filters:
+            - AuthFilter
         - id: blog-service
-          uri: lb://blog-service
+          uri: lb://BLOGSERVICE-LOCAL
           predicates:
             - Path=/blogs/**
+          filters:
+            - AuthFilter
 
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
@@ -31,3 +39,5 @@ eureka:
 logging:
   level:
     org.springframework.security: TRACE
+
+
