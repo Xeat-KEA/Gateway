@@ -5,7 +5,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "atom8426/ct-gateway"  // Docker Hub ID와 리포지토리 이름
+        IMAGE_NAME = "atom8426/ct-gateway"
         APP_NAME = "ct-gateway-app"
     }
 
@@ -53,7 +53,7 @@ pipeline {
                         docker rm ${APP_NAME} || true
                         docker run -d --restart always -p 19091:19091 --name ${APP_NAME} \
                           --env EUREKA_SERVER_URL=${EUREKA_SERVER_URL} \
-                          --env JWT_SECRET_KEY=${JWT_SECRET_KEY}
+                          --env JWT_SECRET=${JWT_SECRET} \
                           ${IMAGE_NAME}:latest
                     """
                 }
