@@ -6,7 +6,7 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: lb://userservice-dev
+          uri: http://172.16.211.57:8081
           predicates:
             - Path=/auth/**, /health, /oauth2/**, /login/**, / #인증 제외 목록
         - id: user-service
