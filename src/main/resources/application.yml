@@ -6,7 +6,7 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: http://172.16.211.57:8081
+          uri: lb://USERSERVICE-DEV #컨테이너에서 DNS 해석이 불가능하기 때문에 docker compose 사용하거나 ip,port 직접 명시해야한다.
           predicates:
             - Path=/auth/**, /health, /oauth2/**, /login/**, / #인증 제외 목록
         - id: user-service
