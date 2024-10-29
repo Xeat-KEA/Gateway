@@ -117,15 +117,15 @@ springdoc:
     use-root-path: true
     urls:
       - name: user-service
-        url: user-service/v3/api-docs
+        url: http://172.16.211.57:19091/user-service/v3/api-docs
       - name: blog-service
-        url: blog-service/v3/api-docs
+        url: http://172.16.211.57:19091/blog-service/v3/api-docs
       - name: code-llm-service
-        url: code-llm-service/v3/api-docs
+        url: http://172.16.211.57:19091/code-llm-service/v3/api-docs
       - name: code-compile-service
-        url: code-compile-service/v3/api-docs
+        url: http://172.16.211.57:19091/code-compile-service/v3/api-docs
       - name: code-bank-service
-        url: code-bank-service/v3/api-docs
+        url: http://172.16.211.57:19091/code-bank-service/v3/api-docs
 
 logging:
   level:
