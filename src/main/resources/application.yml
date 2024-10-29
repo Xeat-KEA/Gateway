@@ -5,22 +5,96 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
-          uri: lb://USERSERVICE-DEV #컨테이너에서 DNS 해석이 불가능하기 때문에 docker compose 사용하거나 ip,port 직접 명시해야한다.
-          predicates:
-            - Path=/auth/**, /health, /oauth2/**, /login/**, / #인증 제외 목록
+        # user-service routes
         - id: user-service
           uri: lb://USERSERVICE-DEV
           predicates:
-            - Path=/users/**
+            - Path=/user-service/users/**
           filters:
             - AuthFilter
-        - id: blog-service
-          uri: lb://BLOGSERVICE-DEV
+            - RewritePath=/user-service/users/(?<remainingPath>.*), /${remainingPath}
+
+        - id: user-service-swagger
+          uri: lb://USERSERVICE-DEV
           predicates:
-            - Path=/blogs/**
+            - Path=/user-service/v3/api-docs, /user-service/swagger-ui/**
+          filters:
+            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: user-service-auth
+          uri: lb://USERSERVICE-DEV
+          predicates:
+            - Path=/user-service/**
+          filters:
+            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
+
+        # blog-service routes
+        - id: blog-service
+          uri: lb://BLOGSERVICE
+          predicates:
+            - Path=/blog-service/**
           filters:
             - AuthFilter
+            - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: blog-service-swagger
+          uri: lb://BLOGSERVICE #TODO: 라우팅 경로 수정필요
+          predicates:
+            - Path=/blog-service/v3/api-docs
+            - Path=/blog-service/swagger-ui/**
+          filters:
+            - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
+
+        # code-llm-service routes
+        - id: code-llm-service
+          uri: lb://CODE_LLM_SERVICE
+          predicates:
+            - Path=/code-llm-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: code-llm-service-swagger
+          uri: lb://CODE_LLM_SERVICE
+          predicates:
+            - Path=/code-llm-service/v3/api-docs
+            - Path=/code-llm-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
+
+        # code-compile-service routes
+        - id: code-compile-service
+          uri: lb://CODE_COMPILE_SERVICE
+          predicates:
+            - Path=/code-compile-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: code-compile-service-swagger
+          uri: lb://CODE_COMPILE_SERVICE
+          predicates:
+            - Path=/code-compile-service/v3/api-docs
+            - Path=/code-compile-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
+
+        # code-bank-service routes
+        - id: code-bank-service
+          uri: lb://CODE_BANK_SERVICE
+          predicates:
+            - Path=/code-bank-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: code-bank-service-swagger
+          uri: lb://CODE_BANK_SERVICE
+          predicates:
+            - Path=/code-bank-service/v3/api-docs
+            - Path=/code-bank-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
 
   jwt:
     secret: ${JWT_SECRET}
@@ -36,8 +110,23 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
 
+# swagger
+springdoc:
+  swagger-ui:
+    enabled: true
+    use-root-path: true
+    urls:
+      - name: user-service
+        url: user-service/v3/api-docs
+      - name: blog-service
+        url: blog-service/v3/api-docs
+      - name: code-llm-service
+        url: code-llm-service/v3/api-docs
+      - name: code-compile-service
+        url: code-compile-service/v3/api-docs
+      - name: code-bank-service
+        url: code-bank-service/v3/api-docs
+
 logging:
   level:
     org.springframework.security: TRACE
-
-
