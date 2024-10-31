@@ -32,8 +32,7 @@ spring:
         - id: blog-service-swagger
           uri: http://172.16.211.63:8080/ #TODO: 라우팅 경로 수정필요
           predicates:
-            - Path=/blog-service/v3/api-docs
-            - Path=/blog-service/swagger-ui/**
+            - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
 
@@ -49,8 +48,7 @@ spring:
         - id: code-llm-service-swagger
           uri: lb://CODE_LLM_SERVICE
           predicates:
-            - Path=/code-llm-service/v3/api-docs
-            - Path=/code-llm-service/swagger-ui/**
+            - Path=/code-llm-service/v3/api-docs, /code-llm-service/swagger-ui/**
           filters:
             - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
 
@@ -67,8 +65,7 @@ spring:
         - id: code-compile-service-swagger
           uri: http://172.16.211.60:18008/
           predicates:
-            - Path=/code-compile-service/v3/api-docs
-            - Path=/code-compile-service/swagger-ui/**
+            - Path=/code-compile-service/v3/api-docs, /code-compile-service/swagger-ui/**
           filters:
             - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
 
@@ -85,8 +82,7 @@ spring:
         - id: code-bank-service-swagger
           uri: http://172.16.211.69:8080/
           predicates:
-            - Path=/code-bank-service/v3/api-docs
-            - Path=/code-bank-service/swagger-ui/**
+            - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
           filters:
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
 
