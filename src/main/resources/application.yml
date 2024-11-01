@@ -46,14 +46,14 @@ spring:
 
         # code-llm-service routes
         - id: code-llm-service-swagger
-          uri: lb://CODE_LLM_SERVICE
+          uri: lb://CODE-LLM-SERVICE
           predicates:
             - Path=/code-llm-service/v3/api-docs, /code-llm-service/swagger-ui/**
           filters:
             - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: code-llm-service
-          uri: lb://CODE_LLM_SERVICE
+          uri: lb://CODE-LLM-SERVICE
           predicates:
             - Path=/code-llm-service/**
           filters:
@@ -63,7 +63,7 @@ spring:
 
         # code-compile-service routes
         - id: code-compile-service-swagger
-          uri: lb://CODE-COMPILE-SERVICE
+          uri: http://172.16.211.60:18008/
           predicates:
             - Path=/code-compile-service/v3/api-docs, /code-compile-service/swagger-ui/**
           filters:
@@ -80,7 +80,7 @@ spring:
 
         # code-bank-service routes
         - id: code-bank-service-swagger
-          uri: lb://CODE-BANK-SERVICE
+          uri: http://172.16.211.69:8080/
           predicates:
             - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
           filters:
