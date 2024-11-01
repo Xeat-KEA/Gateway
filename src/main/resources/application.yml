@@ -127,6 +127,17 @@ springdoc:
       - name: code-bank-service
         url: http://172.16.211.57:19091/code-bank-service/v3/api-docs
 
+#actuator
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+#log
 logging:
   level:
     org.springframework.security: TRACE
