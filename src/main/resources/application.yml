@@ -30,7 +30,7 @@ spring:
 
         # blog-service routes
         - id: blog-service-swagger
-          uri: lb://BLOG-SERVICE #TODO: 라우팅 경로 수정필요
+          uri: http://172.16.211.63:8080/
           predicates:
             - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
           filters:
