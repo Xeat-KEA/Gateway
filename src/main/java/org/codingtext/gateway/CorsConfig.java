@@ -13,7 +13,7 @@ public class CorsConfig implements WebFluxConfigurer {
         corsRegistry.addMapping("/**")
                 .exposedHeaders("Set-Cookie")
                 .allowedHeaders("*")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOriginPatterns("*")  // 모든 Origin 허용
                 .allowCredentials(true);
     }
 }
