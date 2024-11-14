@@ -4,7 +4,6 @@ spring:
   config:
     activate:
       on-profile: prod
-
   cloud:
     gateway:
       routes:
@@ -96,15 +95,21 @@ spring:
           filters:
             - AuthFilter
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
-
-
+    kubernetes:
+      loadbalancer:
+        enabled: true
+        mode: service
+      discovery:
+        enabled: false
+        all-namespaces: true
+      config:
+        enabled: false
 
   jwt:
     secret: ${JWT_SECRET}
 
 server:
   port: 19091
-
 
 # swagger
 springdoc:
