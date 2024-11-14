@@ -1,0 +1,139 @@
+spring:
+  application:
+    name: gateway
+  config:
+    activate:
+      on-profile: prod
+
+  cloud:
+    gateway:
+      routes:
+        # user-service routes
+        - id: user-service
+          uri: ${USER_SERVICE_URL}
+          predicates:
+            - Path=/user-service/users/**
+          filters:
+            - AuthFilter
+            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: user-service-swagger
+          uri: ${USER_SERVICE_URL}
+          predicates:
+            - Path=/user-service/v3/api-docs, /user-service/swagger-ui/**
+          filters:
+            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: user-service-auth
+          uri: ${USER_SERVICE_URL}
+          predicates:
+            - Path=/user-service/**
+          filters:
+            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
+
+        # blog-service routes
+        - id: blog-service-swagger
+          uri: ${BLOG_SERVICE_URL}
+          predicates:
+            - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
+          filters:
+            - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: blog-service
+          uri: ${BLOG_SERVICE_URL}
+          predicates:
+            - Path=/blog-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
+
+        # code-llm-service routes
+        - id: code-llm-service-swagger
+          uri: lb://CODE-LLM-SERVICE
+          predicates:
+            - Path=/code-llm-service/v3/api-docs, /code-llm-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: code-llm-service
+          uri: lb://CODE-LLM-SERVICE
+          predicates:
+            - Path=/code-llm-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
+
+
+        # code-compile-service routes
+        - id: code-compile-service-swagger
+          uri: ${CODE_COMPILE_SERVICE_URL}
+          predicates:
+            - Path=/code-compile-service/v3/api-docs, /code-compile-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: code-compile-service
+          uri: ${CODE_COMPILE_SERVICE_URL}
+          predicates:
+            - Path=/code-compile-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
+
+
+        # code-bank-service routes
+        - id: code-bank-service-swagger
+          uri: lb://code-bank-service
+          predicates:
+            - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: code-bank-service
+          uri: lb://code-bank-service
+          predicates:
+            - Path=/code-bank-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+
+
+
+  jwt:
+    secret: ${JWT_SECRET}
+
+server:
+  port: 19091
+
+
+# swagger
+springdoc:
+  swagger-ui:
+    enabled: true
+    use-root-path: true
+    urls:
+      - name: user-service
+        url: ${USER_SERVICE_URL}/user-service/v3/api-docs
+      - name: blog-service
+        url: ${BLOG_SERVICE_URL}/blog-service/v3/api-docs
+      - name: code-llm-service
+        url: ${CODE_LLM_SERVICE_URL}/code-llm-service/v3/api-docs
+      - name: code-compile-service
+        url: ${CODE_COMPILE_SERVICE_URL}/code-compile-service/v3/api-docs
+      - name: code-bank-service
+        url: ${CODE_BANK_SERVICE_URL}/code-bank-service/v3/api-docs
+
+#actuator
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+#log
+logging:
+  level:
+    org.springframework.security: TRACE
