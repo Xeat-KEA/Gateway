@@ -48,14 +48,14 @@ spring:
 
         # code-llm-service routes
         - id: code-llm-service-swagger
-          uri: lb://CODE-LLM-SERVICE
+          uri: ${CODE_LLM_SERVICE_URL}
           predicates:
             - Path=/code-llm-service/v3/api-docs, /code-llm-service/swagger-ui/**
           filters:
             - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: code-llm-service
-          uri: lb://CODE-LLM-SERVICE
+          uri: ${CODE_LLM_SERVICE_URL}
           predicates:
             - Path=/code-llm-service/**
           filters:
@@ -82,14 +82,14 @@ spring:
 
         # code-bank-service routes
         - id: code-bank-service-swagger
-          uri: lb://code-bank-service
+          uri: ${CODE_BANK_SERVICE_URL}
           predicates:
             - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
           filters:
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: code-bank-service
-          uri: lb://code-bank-service
+          uri: ${CODE_BANK_SERVICE_URL}
           predicates:
             - Path=/code-bank-service/**
           filters:
@@ -100,7 +100,7 @@ spring:
         enabled: true
         mode: service
       discovery:
-        enabled: false
+        enabled: true
         all-namespaces: true
       config:
         enabled: false

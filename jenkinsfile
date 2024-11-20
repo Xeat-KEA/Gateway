@@ -5,8 +5,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "atom8426/ct-gateway"
-        APP_NAME = "ct-gateway-app"
+        IMAGE_NAME = "atom8426/ct-gateway-dev"
         DOCKER_COMPOSE_FILE = "/home/pjh1/spring-cloud/docker-compose.yml" // Docker Compose 파일 경로
     }
 
