@@ -1,13 +1,15 @@
 spring:
   application:
     name: gateway
-
+  config:
+    activate:
+      on-profile: dev
   cloud:
     gateway:
       routes:
         # user-service routes
         - id: user-service
-          uri: lb://USERSERVICE-DEV
+          uri: lb://user-service
           predicates:
             - Path=/user-service/users/**
           filters:
@@ -15,14 +17,14 @@ spring:
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: user-service-swagger
-          uri: lb://USERSERVICE-DEV
+          uri: lb://user-service
           predicates:
             - Path=/user-service/v3/api-docs, /user-service/swagger-ui/**
           filters:
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: user-service-auth
-          uri: lb://USERSERVICE-DEV
+          uri: lb://user-service
           predicates:
             - Path=/user-service/**
           filters:
@@ -46,14 +48,14 @@ spring:
 
         # code-llm-service routes
         - id: code-llm-service-swagger
-          uri: lb://CODE-LLM-SERVICE
+          uri: lb://code-llm-service
           predicates:
             - Path=/code-llm-service/v3/api-docs, /code-llm-service/swagger-ui/**
           filters:
             - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: code-llm-service
-          uri: lb://CODE-LLM-SERVICE
+          uri: lb://code-llm-service
           predicates:
             - Path=/code-llm-service/**
           filters:
