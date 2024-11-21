@@ -100,23 +100,23 @@ spring:
         - id: admin-service-swagger
           uri: lb://admin-service
           predicates:
-            - Path=/admin-service/v3/api-docs, /code-bank-service/swagger-ui/**
+            - Path=/admin-service/v3/api-docs, /admin-service/swagger-ui/**
           filters:
-            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
-
-        - id: admin-service
-          uri: admin-service
-          predicates:
-            - Path=/admin-service/**
-          filters:
-            - AuthFilter
-            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+            - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: admin-service-health
           uri: lb://admin-service
           predicates:
             - Path=/admin-service/health
           filters:
+            - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
+            -
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin-service/**
+          filters:
+            - AuthFilter
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
 
 
@@ -151,6 +151,8 @@ springdoc:
         url: http://172.16.211.57:19091/code-compile-service/v3/api-docs
       - name: code-bank-service
         url: http://172.16.211.57:19091/code-bank-service/v3/api-docs
+      - name: admin-service
+        url: http://172.16.211.57:19091/admin-service/v3/api-docs
 
 #actuator
 management:
