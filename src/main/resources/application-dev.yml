@@ -7,37 +7,35 @@ spring:
   cloud:
     gateway:
       routes:
-        # user-service routes
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/user-service/users/**
-          filters:
-            - AuthFilter
-            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
-
+        # user-service
         - id: user-service-swagger
           uri: lb://user-service
           predicates:
             - Path=/user-service/v3/api-docs, /user-service/swagger-ui/**
           filters:
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
-
-        - id: user-service-auth
+        - id: user-service-health
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/health, /user-service/auth/**
+          filters:
+            - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
+        - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user-service/**
           filters:
+            - AuthFilter
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
 
-        # blog-service routes
+
+        # blog-service
         - id: blog-service-swagger
           uri: lb://blog-service
           predicates:
             - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
-
         - id: blog-service
           uri: lb://blog-service
           predicates:
@@ -46,14 +44,14 @@ spring:
             - AuthFilter
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
 
-        # code-llm-service routes
+
+        # code-llm-service
         - id: code-llm-service-swagger
           uri: lb://code-llm-service
           predicates:
             - Path=/code-llm-service/v3/api-docs, /code-llm-service/swagger-ui/**
           filters:
             - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
-
         - id: code-llm-service
           uri: lb://code-llm-service
           predicates:
@@ -63,14 +61,13 @@ spring:
             - RewritePath=/code-llm-service/(?<remainingPath>.*), /${remainingPath}
 
 
-        # code-compile-service routes
+        # code-compile-service
         - id: code-compile-service-swagger
           uri: lb://code-compile-service
           predicates:
             - Path=/code-compile-service/v3/api-docs, /code-compile-service/swagger-ui/**
           filters:
             - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
-
         - id: code-compile-service
           uri: lb://code-compile-service
           predicates:
@@ -79,15 +76,13 @@ spring:
             - AuthFilter
             - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
 
-
-        # code-bank-service routes
+        # code-bank-service
         - id: code-bank-service-swagger
           uri: lb://code-bank-service
           predicates:
             - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
           filters:
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
-
         - id: code-bank-service
           uri: lb://code-bank-service
           predicates:
@@ -96,29 +91,27 @@ spring:
             - AuthFilter
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
 
-        # admin-service routes
+
+        # admin-service
         - id: admin-service-swagger
           uri: lb://admin-service
           predicates:
             - Path=/admin-service/v3/api-docs, /admin-service/swagger-ui/**
           filters:
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
-
         - id: admin-service-health
           uri: lb://admin-service
           predicates:
             - Path=/admin-service/health
           filters:
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
-
         - id: admin-service
           uri: lb://admin-service
           predicates:
             - Path=/admin-service/**
           filters:
-            - AuthFilter
+            - AuthAdminFilter
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
-
 
   jwt:
     secret: ${JWT_SECRET}
