@@ -110,7 +110,7 @@ spring:
             - Path=/admin-service/health
           filters:
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
-            -
+
         - id: admin-service
           uri: lb://admin-service
           predicates:
@@ -118,7 +118,6 @@ spring:
           filters:
             - AuthFilter
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
-
 
 
   jwt:
