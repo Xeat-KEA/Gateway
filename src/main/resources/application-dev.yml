@@ -32,14 +32,14 @@ spring:
 
         # blog-service routes
         - id: blog-service-swagger
-          uri: http://172.16.211.63:8080/
+          uri: lb://blog-service
           predicates:
             - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: blog-service
-          uri: http://172.16.211.63:8080/
+          uri: lb://blog-service
           predicates:
             - Path=/blog-service/**
           filters:
@@ -82,19 +82,42 @@ spring:
 
         # code-bank-service routes
         - id: code-bank-service-swagger
-          uri: http://172.16.211.69:8080/
+          uri: lb://code-bank-service
           predicates:
             - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
           filters:
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: code-bank-service
-          uri: http://172.16.211.69:8080/
+          uri: lb://code-bank-service
           predicates:
             - Path=/code-bank-service/**
           filters:
             - AuthFilter
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+
+        # admin-service routes
+        - id: admin-service-swagger
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin-service/v3/api-docs, /code-bank-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: admin-service
+          uri: admin-service
+          predicates:
+            - Path=/admin-service/**
+          filters:
+            - AuthFilter
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+
+        - id: admin-service-health
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin-service/health
+          filters:
+            - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
 
 
 
