@@ -65,14 +65,14 @@ spring:
 
         # code-compile-service routes
         - id: code-compile-service-swagger
-          uri: http://172.16.211.60:18008/
+          uri: lb://code-compile-service
           predicates:
             - Path=/code-compile-service/v3/api-docs, /code-compile-service/swagger-ui/**
           filters:
             - RewritePath=/code-compile-service/(?<remainingPath>.*), /${remainingPath}
 
         - id: code-compile-service
-          uri: http://172.16.211.60:18008/
+          uri: lb://code-compile-service
           predicates:
             - Path=/code-compile-service/**
           filters:
