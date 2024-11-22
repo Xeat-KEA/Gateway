@@ -17,7 +17,7 @@ spring:
         - id: user-service-health
           uri: ${USER_SERVICE_URL}
           predicates:
-            - Path=/user-service/health, /user-service/auth/**, /user-service/oauth2/authorization/**
+            - Path=/user-service/health, /user-service/auth/**, /user-service/oauth2/authorization/**, /user-service/login/oauth2/code/**
           filters:
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
         - id: user-service
