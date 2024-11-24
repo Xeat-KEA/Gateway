@@ -137,17 +137,17 @@ springdoc:
     use-root-path: true
     urls:
       - name: user-service
-        url: ${USER_SERVICE_URL}/user-service/v3/api-docs
+        url: http://172.16.211.57:19091/user-service/v3/api-docs
       - name: blog-service
-        url: ${BLOG_SERVICE_URL}/blog-service/v3/api-docs
+        url: http://172.16.211.57:19091/blog-service/v3/api-docs
       - name: code-llm-service
-        url: ${CODE_LLM_SERVICE_URL}/code-llm-service/v3/api-docs
+        url: http://172.16.211.57:19091/code-llm-service/v3/api-docs
       - name: code-compile-service
-        url: ${CODE_COMPILE_SERVICE_URL}/code-compile-service/v3/api-docs
+        url: http://172.16.211.57:19091/code-compile-service/v3/api-docs
       - name: code-bank-service
-        url: ${CODE_BANK_SERVICE_URL}/code-bank-service/v3/api-docs
+        url: http://172.16.211.57:19091/code-bank-service/v3/api-docs
       - name: admin-service
-        url: ${ADMIN_SERVICE_URL}/admin-service/v3/api-docs
+        url: http://172.16.211.57:19091/admin-service/v3/api-docs
 
 #actuator
 management:
