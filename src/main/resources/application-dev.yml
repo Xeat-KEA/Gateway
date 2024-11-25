@@ -17,7 +17,7 @@ spring:
         - id: user-service-health
           uri: lb://user-service
           predicates:
-            - Path=/user-service/health, /user-service/auth/**, /user-service/oauth2/authorization/**, /user-service/login/oauth2/code/**
+            - Path=/user-service/health, /user-service/auth/**, /user-service/oauth2/authorization/**, /user-service/login/oauth2/code/**, /user-service/users/announce
           filters:
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
         - id: user-service
@@ -34,6 +34,12 @@ spring:
           uri: lb://blog-service
           predicates:
             - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
+          filters:
+            - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
+        - id: blog-service-health
+          uri: lb://blog-service
+          predicates:
+            - Path=/blog-service/blog/board/all/best, /blog-service/blog/board/article/recent
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
         - id: blog-service
@@ -81,6 +87,12 @@ spring:
           uri: lb://code-bank-service
           predicates:
             - Path=/code-bank-service/v3/api-docs, /code-bank-service/swagger-ui/**
+          filters:
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+        - id: code-bank-service-health
+          uri: lb://code-bank-service
+          predicates:
+            - Path=/code-bank-service/code/lists, /code-bank-service/code/non/lists/*
           filters:
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
         - id: code-bank-service
