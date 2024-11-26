@@ -30,20 +30,20 @@ spring:
 
 
         # blog-service
-        - id: blog-service-swagger
+        - id: swagger
           uri: lb://blog-service
           predicates:
             - Path=/blog-service/v3/api-docs, /blog-service/swagger-ui/**
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
-        - id: blog-service-health
+        - id: health
           uri: lb://blog-service
           predicates:
-            - Path=/blog-service/blog/board/**
+            - Path=/blog-service/blog/board/userInfo/**, /blog-service/blog/board/search/**, /blog-service/blog/board/nonUser/**, /blog-service/blog/board/article/**, /blog-service/blog/board/all/**, /blog-service/blog/board/list/**
             - Method=GET
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
-        - id: blog-service
+        - id: lock
           uri: lb://blog-service
           predicates:
             - Path=/blog-service/**
