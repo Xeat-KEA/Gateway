@@ -16,6 +16,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
+import static org.codingtext.gateway.error.ErrorResponse.onError;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -48,13 +50,13 @@ public class JwtProvider {
                     .parseSignedClaims(token);
             return true;
 
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT token. 만료된 jwt 토큰 입니다.");
+            throw e; // 만료된 토큰의 경우 별도로 처리하기 위해 예외를 던집니다.
         } catch (SignatureException e) {
             log.error("Invalid JWT signature, signature 가 유효하지 않은 토큰 입니다.");
         } catch (MalformedJwtException | UnsupportedJwtException e) {
             log.error("Invalid JWT token, 유효하지 않은 jwt 토큰 입니다.");
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token. 만료된 jwt 토큰 입니다.");
-            throw new TokenExpiredException(HttpStatus.UNAUTHORIZED, "access token 만료", e);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
