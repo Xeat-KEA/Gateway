@@ -1,11 +1,13 @@
-package org.codingtext.gateway;
+package org.codingtext.gateway.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codingtext.gateway.error.TokenExpiredException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -52,6 +54,7 @@ public class JwtProvider {
             log.error("Invalid JWT token, 유효하지 않은 jwt 토큰 입니다.");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token. 만료된 jwt 토큰 입니다.");
+            throw new TokenExpiredException(HttpStatus.UNAUTHORIZED, "access token 만료", e);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
