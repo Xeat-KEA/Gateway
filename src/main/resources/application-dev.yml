@@ -39,7 +39,7 @@ spring:
         - id: health
           uri: lb://blog-service
           predicates:
-            - Path=/blog-service/blog/board/userInfo/**, /blog-service/blog/board/search/**, /blog-service/blog/board/nonUser/**, /blog-service/blog/board/article/**, /blog-service/blog/board/all/**, /blog-service/blog/board/list/**
+            - Path=/blog-service/blog/board/userInfo/**, /blog-service/blog/board/search/**, /blog-service/blog/board/nonUser/**, /blog-service/blog/board/article/**, /blog-service/blog/board/all/**, /blog-service/blog/board/list/**,  /blog-service/blog/board/code/recent
             - Method=GET
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
