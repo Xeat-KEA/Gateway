@@ -115,7 +115,7 @@ spring:
         - id: admin-service-health
           uri: lb://admin-service
           predicates:
-            - Path=/admin-service/health
+            - Path=/admin-service/health, /admin-service/auth/**
           filters:
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
         - id: admin-service
