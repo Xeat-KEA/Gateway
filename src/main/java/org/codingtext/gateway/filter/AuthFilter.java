@@ -47,7 +47,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 }
             } catch (ExpiredJwtException e) {
                 // 만료된 토큰의 경우 별도 처리
-                return ErrorResponse.onError(exchange, "토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
+                return ErrorResponse.onError(exchange, "토큰이 만료되었습니다.", HttpStatus.PAYMENT_REQUIRED);
             }
             // 유효하지 않은 토큰의 경우 처리
             return ErrorResponse.onError(exchange, "AccessToken 이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);

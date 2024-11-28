@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+
 public class ErrorResponse {
     private ErrorResponse() {
         // 유틸리티 클래스는 인스턴스화 방지
