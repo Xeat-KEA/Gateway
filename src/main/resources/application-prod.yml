@@ -124,8 +124,8 @@ spring:
       config:
         enabled: false
 
-  jwt:
-    secret: ${JWT_SECRET}
+jwt:
+  secret: ${JWT_SECRET}
 
 server:
   port: 19091

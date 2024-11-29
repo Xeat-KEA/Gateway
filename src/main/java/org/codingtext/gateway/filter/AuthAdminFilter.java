@@ -36,7 +36,7 @@ public class AuthAdminFilter extends AbstractGatewayFilterFactory<AuthAdminFilte
 
             try {
                 // JWT 검증
-                if (jwtProvider.validateToken(accessToken)) {
+                if (jwtProvider.validateAdminToken(accessToken)) {
                     // 검증 성공, 요청을 계속 진행
                     Claims claims = jwtProvider.getUserInfoFromToken(accessToken);
                     String email = claims.getSubject();

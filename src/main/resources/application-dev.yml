@@ -132,8 +132,10 @@ spring:
             - AuthAdminFilter
             - RewritePath=/admin-service/(?<remainingPath>.*), /${remainingPath}
 
-  jwt:
-    secret: ${JWT_SECRET}
+jwt:
+  secret: ${JWT_SECRET}
+  admin:
+    secret: ${JWT_ADMIN_SECRET}
 
 server:
   port: 19091
