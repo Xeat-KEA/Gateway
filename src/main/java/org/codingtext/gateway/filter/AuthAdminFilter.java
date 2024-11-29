@@ -39,8 +39,8 @@ public class AuthAdminFilter extends AbstractGatewayFilterFactory<AuthAdminFilte
                 if (jwtProvider.validateToken(accessToken)) {
                     // 검증 성공, 요청을 계속 진행
                     Claims claims = jwtProvider.getUserInfoFromToken(accessToken);
-                    String adminId = claims.getSubject();
-                    request.mutate().header("AdminId", adminId).build(); // 다른 MicroService 에서 해당 ID 참조 가능
+                    String email = claims.getSubject();
+                    request.mutate().header("Email", email).build(); // 다른 MicroService 에서 해당 ID 참조 가능
                     return chain.filter(exchange);
                 }
             } catch (ExpiredJwtException e) {
