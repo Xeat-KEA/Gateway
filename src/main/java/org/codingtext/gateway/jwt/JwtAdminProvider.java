@@ -5,9 +5,7 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.codingtext.gateway.error.TokenExpiredException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -16,23 +14,22 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
-
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class JwtProvider {
+public class JwtAdminProvider {
 
-    @Value("${jwt.secret}")
-    private String secret;
-    private SecretKey secretKey;;
+    @Value("${jwt.admin.secret}")
+    private String adminSecret;
+    private SecretKey adminSecretKey;
 
     @PostConstruct
     public void init() {
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        adminSecretKey = new SecretKeySpec(adminSecret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
     //Authorization: JWT 검증
-    public String resolveTokenHeader(ServerHttpRequest request) {
+    public String resolveAdminTokenHeader(ServerHttpRequest request) {
         String bearerToken = request.getHeaders().getFirst("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -40,11 +37,11 @@ public class JwtProvider {
         return null;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateAdminToken(String token) {
         try {
             Jwts
                     .parser()
-                    .verifyWith(secretKey)
+                    .verifyWith(adminSecretKey)
                     .build()
                     .parseSignedClaims(token);
             return true;
@@ -62,10 +59,10 @@ public class JwtProvider {
         return false;
     }
 
-    public Claims getUserInfoFromToken(String token) {
+    public Claims getUserInfoFromAdminToken(String token) {
         return Jwts
                 .parser()
-                .verifyWith(secretKey)
+                .verifyWith(adminSecretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
