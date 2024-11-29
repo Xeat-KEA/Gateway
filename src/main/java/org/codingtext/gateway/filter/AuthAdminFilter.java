@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.codingtext.gateway.error.ErrorResponse;
+import org.codingtext.gateway.jwt.JwtAdminProvider;
 import org.codingtext.gateway.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -17,12 +18,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AuthAdminFilter extends AbstractGatewayFilterFactory<AuthAdminFilter.Config> {
-    private final JwtProvider jwtProvider;
+    private final JwtAdminProvider jwtAdminProvider;
 
     @Autowired
-    public AuthAdminFilter(JwtProvider jwtProvider) {
+    public AuthAdminFilter(JwtAdminProvider jwtAdminProvider) {
         super(AuthAdminFilter.Config.class);
-        this.jwtProvider = jwtProvider;
+        this.jwtAdminProvider = jwtAdminProvider;
     }
 
     public static class Config {
@@ -32,13 +33,13 @@ public class AuthAdminFilter extends AbstractGatewayFilterFactory<AuthAdminFilte
     public GatewayFilter apply(AuthAdminFilter.Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            String accessToken = jwtProvider.resolveTokenHeader(request);
+            String accessToken = jwtAdminProvider.resolveAdminTokenHeader(request);
 
             try {
                 // JWT 검증
-                if (jwtProvider.validateAdminToken(accessToken)) {
+                if (jwtAdminProvider.validateAdminToken(accessToken)) {
                     // 검증 성공, 요청을 계속 진행
-                    Claims claims = jwtProvider.getUserInfoFromToken(accessToken);
+                    Claims claims = jwtAdminProvider.getUserInfoFromAdminToken(accessToken);
                     String email = claims.getSubject();
                     request.mutate().header("Email", email).build(); // 다른 MicroService 에서 해당 ID 참조 가능
                     return chain.filter(exchange);
