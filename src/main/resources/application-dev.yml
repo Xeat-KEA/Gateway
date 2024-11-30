@@ -102,6 +102,13 @@ spring:
             - Path=/code-bank-service/code/lists, /code-bank-service/code/non/lists/*
           filters:
             - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
+        - id: bank-admin-auth
+          uri: lb://code-bank-service
+          predicates:
+            - Path=/code-bank-service/admin/**
+          filters:
+            - AuthAdminFilter
+            - RewritePath=/code-bank-service/(?<remainingPath>.*), /${remainingPath}
         - id: bank-auth
           uri: lb://code-bank-service
           predicates:
