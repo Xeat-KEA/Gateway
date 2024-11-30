@@ -23,7 +23,7 @@ spring:
         - id: user-admin-auth
           uri: lb://user-service
           predicates:
-            - Path=/user-service/users/list
+            - Path=/user-service/users/list, /user-service/users/init/**,
           filters:
             - AuthAdminFilter
             - RewritePath=/user-service/(?<remainingPath>.*), /${remainingPath}
