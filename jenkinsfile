@@ -5,16 +5,20 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "atom8426/ct-gateway-dev"
+        IMAGE_NAME = "hurraypersimmon/codingtext"
+        IMAGE_TAG = "gateway"
         APP_NAME = "ct-gateway-app"
         JWT_SECRET = "vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb"
-        EUREKA_SERVER_URL="http://172.16.211.57:19090/eureka/"
+        JWT_ADMIN_SECRET = "vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaaccccc"
+        EUREKA_SERVER_URL = "http://172.16.211.57:19090/eureka/"
+        ACTIVE_PROFILE = "prod"
+        SSH_CREDENTIALS = "jenkins_private_key"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'develop', credentialsId: 'github_access_token', url: 'https://github.com/Xeat-KEA/APIGateway.git'
+                git branch: 'main', credentialsId: 'github_access_token', url: 'https://github.com/Xeat-KEA/APIGateway.git'
             }
         }
 
@@ -31,12 +35,12 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${IMAGE_NAME}:latest .'
-                    withCredentials([usernamePassword(credentialsId: 'docker_credential_id', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                        docker.withRegistry('https://index.docker.io/v1/', 'docker_credential_id') {
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    withCredentials([usernamePassword(credentialsId: 'ct-dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        docker.withRegistry('https://index.docker.io/v1/', 'ct-dockerhub') {
                             sh '''
                                 echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                                docker push "${IMAGE_NAME}:latest"
+                                docker push "${IMAGE_NAME}:${IMAGE_TAG}"
                             '''
                         }
                     }
@@ -47,16 +51,22 @@ pipeline {
         stage('Deploy to VM') {
             steps {
                 script {
-                    sh """
-                        docker pull ${IMAGE_NAME}:latest
-                        docker stop ${APP_NAME} || true
-                        docker rm ${APP_NAME} || true
-                        docker run -d --restart always --network host --name ${APP_NAME} \
-                            --env SPRING_PROFILE=dev \
-                            --env JWT_SECRET=${JWT_SECRET} \
-                            --env EUREKA_SERVER_URL=${EUREKA_SERVER_URL} \
-                            ${IMAGE_NAME}:latest
-                    """
+                    sshagent(credentials: [SSH_CREDENTIALS]) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
+                                docker pull ${IMAGE_NAME}:${IMAGE_TAG}
+                                docker stop ${APP_NAME} || true
+                                docker rm ${APP_NAME} || true
+                                docker run -d --restart always --network host --name ${APP_NAME} \
+                                    --env SPRING_PROFILE=${ACTIVE_PROFILE} \
+                                    --env JWT_SECRET=${JWT_SECRET} \
+                                    --env JWT_ADMIN_SECRET=${JWT_ADMIN_SECRET} \
+                                    --env EUREKA_SERVER_URL=${EUREKA_SERVER_URL} \
+                                    ${IMAGE_NAME}:${IMAGE_TAG}
+                                docker system prune -a -f
+                            '
+                        """
+                    }
                 }
             }
         }
