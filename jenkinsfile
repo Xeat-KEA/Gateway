@@ -13,12 +13,13 @@ pipeline {
         EUREKA_SERVER_URL = "http://172.16.211.57:19090/eureka/"
         ACTIVE_PROFILE = "prod"
         SSH_CREDENTIALS = "jenkins_private_key"
+        TARGET_HOST = "pjh1@172.16.211.57"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github_access_token', url: 'https://github.com/Xeat-KEA/APIGateway.git'
+                git branch: 'main', credentialsId: 'github_access_token', url: 'https://github.com/Xeat-KEA/gateway.git'
             }
         }
 

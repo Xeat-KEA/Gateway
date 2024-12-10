@@ -49,6 +49,13 @@ spring:
             - Method=GET
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
+        - id: blog-admin-image
+          uri: lb://blog-service
+          predicates:
+            - Path=/blog-service/admin/upload
+          filters:
+            - AuthAdminFilter
+            - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
         - id: blog-auth
           uri: lb://blog-service
           predicates:
