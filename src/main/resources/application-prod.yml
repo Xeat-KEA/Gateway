@@ -52,7 +52,7 @@ spring:
         - id: blog-admin-image
           uri: lb://blog-service
           predicates:
-            - Path=/blog-service/admin/upload
+            - Path=/blog-service/admin/**
           filters:
             - AuthAdminFilter
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
