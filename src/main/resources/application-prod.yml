@@ -49,7 +49,7 @@ spring:
             - Method=GET
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
-        - id: blog-health
+        - id: blog-health-2
           uri: lb://blog-service
           predicates:
             - Path=/blog-service/blog/board/article/viewCount/*
