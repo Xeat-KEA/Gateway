@@ -45,8 +45,8 @@ spring:
         - id: blog-health
           uri: lb://blog-service
           predicates:
-            - Path=/blog-service/blog/board/userInfo/**, /blog-service/blog/board/search/**, /blog-service/blog/board/nonUser/**, /blog-service/blog/board/article/**, /blog-service/blog/board/all/**, /blog-service/blog/board/list/**,  /blog-service/blog/board/code/recent, /blog-service/blog/search, /blog-service/blog/article/search
-            - Method=GET
+            - Path=/blog-service/blog/board/userInfo/**, /blog-service/blog/board/search/**, /blog-service/blog/board/nonUser/**, /blog-service/blog/board/article/**, /blog-service/blog/board/all/**, /blog-service/blog/board/list/**,  /blog-service/blog/board/code/recent, /blog-service/blog/search, /blog-service/blog/article/search, /blog-service/blog/board/article/viewCount/*
+            - Method=GET, PUT
           filters:
             - RewritePath=/blog-service/(?<remainingPath>.*), /${remainingPath}
         - id: blog-admin-image
